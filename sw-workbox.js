@@ -26,15 +26,15 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "d63ac23ca31313d7d28b7cfb9e4ce51a"
+    "revision": "f598d1010b39d8b48cf5c770986f5126"
   },
   {
     "url": "manifest.json",
-    "revision": "59cef07dcc5746651193208ec35caeed"
+    "revision": "60167ce42e10f7a3947fa30f7cb6443d"
   },
   {
     "url": "asset-manifest.json",
-    "revision": "dbd5dd26726da1a13f4d43effd0e0340"
+    "revision": "d36b2cd004778ff3b36500b337b6461e"
   },
   {
     "url": "times_db.json",
@@ -45,12 +45,12 @@ workbox.precaching.precacheAndRoute([
     "revision": "6a3a178d905ed86e3d7f91fd6e123ae7"
   },
   {
-    "url": "static/css/main.376f3322.css",
-    "revision": "5bf70d31cb05d2d79ee793a7fda375e9"
+    "url": "static/css/main.349bb4e3.css",
+    "revision": "451f2c99f3efff01e14d858e767c4dcb"
   },
   {
-    "url": "static/css/main.376f3322.css.map",
-    "revision": "48410b37819f04b961cd44180930c822"
+    "url": "static/css/main.349bb4e3.css.map",
+    "revision": "957af6ee962fed9143fc408cf450cac9"
   },
   {
     "url": "static/js/453.7240d997.chunk.js",
@@ -73,20 +73,8 @@ workbox.precaching.precacheAndRoute([
     "revision": "d898b3fb071b8961d127a5ae3115e6e0"
   },
   {
-    "url": "main.js",
-    "revision": "80846bb3403b82a07c7f84658f186b23"
-  },
-  {
-    "url": "polyfills.js",
-    "revision": "56f34b0f4d3a42d45bfdb1782adaa173"
-  },
-  {
     "url": "pwacompat.min.js",
     "revision": "038770ef3eb91f3e8a50a3916cb7cf28"
-  },
-  {
-    "url": "runtime.js",
-    "revision": "cd1ce3e306bf57f272364d1cc0249d6e"
   },
   {
     "url": "update.js",
