@@ -26,15 +26,15 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "b3630a68a9027e7a413f71d606c9fab3"
+    "revision": "727526210a8dc770bcdcafc3f3a717de"
   },
   {
     "url": "manifest.json",
-    "revision": "fcb0c50795020f77697f270ffd841a32"
+    "revision": "214003ef23bc625a166c95dc4d9ded2f"
   },
   {
     "url": "asset-manifest.json",
-    "revision": "d36b2cd004778ff3b36500b337b6461e"
+    "revision": "2541a4c90212ebb99ee94066c4a78fa4"
   },
   {
     "url": "times_db.json",
@@ -61,16 +61,16 @@ workbox.precaching.precacheAndRoute([
     "revision": "cad9286f09302279362593856a291a6f"
   },
   {
-    "url": "static/js/main.71b248a6.js",
-    "revision": "67b91c55c569941ff3147458f85f8d24"
+    "url": "static/js/main.377bebdc.js",
+    "revision": "c2901cea39b4846595645090f782f3b4"
   },
   {
-    "url": "static/js/main.71b248a6.js.LICENSE.txt",
+    "url": "static/js/main.377bebdc.js.LICENSE.txt",
     "revision": "cccfa45cda3f72c4ebb3fb2f4ba53a71"
   },
   {
-    "url": "static/js/main.71b248a6.js.map",
-    "revision": "d898b3fb071b8961d127a5ae3115e6e0"
+    "url": "static/js/main.377bebdc.js.map",
+    "revision": "e0b294b3943d79e0ff2713601795565a"
   },
   {
     "url": "main.js",
@@ -126,27 +126,27 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "img/svg/asr.svg",
-    "revision": "f1adbf63958fa18479356f65b0a36dc9"
+    "revision": "3846925b742c58557aca26b8767949bd"
   },
   {
     "url": "img/svg/dhuhr.svg",
-    "revision": "7601c712e2ca774eb824aabdede428f9"
+    "revision": "dabd6c8ae3693304a022ce4eb9babd8b"
   },
   {
     "url": "img/svg/fajr.svg",
-    "revision": "ff919ba3e36b904aa6c8b4b923e1c08e"
+    "revision": "38d9b75677492b00774b86813a622c6b"
   },
   {
     "url": "img/svg/isha.svg",
-    "revision": "eb4c8a91ecc2855fbcfb71e2ea6de086"
+    "revision": "58098ef90128c1e040a909c2386bcccf"
   },
   {
     "url": "img/svg/magrib.svg",
-    "revision": "8746e210455b0951d83677e27e38812e"
+    "revision": "647773c30b98f9a7f002602d6e54595b"
   },
   {
     "url": "img/svg/sunrise.svg",
-    "revision": "930c2dae2f8aef81ecb620da39144b79"
+    "revision": "22856041e45fb64976eb29f9697ce61b"
   }
 ]);
 
