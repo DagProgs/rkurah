@@ -26,11 +26,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "f598d1010b39d8b48cf5c770986f5126"
+    "revision": "b3630a68a9027e7a413f71d606c9fab3"
   },
   {
     "url": "manifest.json",
-    "revision": "60167ce42e10f7a3947fa30f7cb6443d"
+    "revision": "fcb0c50795020f77697f270ffd841a32"
   },
   {
     "url": "asset-manifest.json",
@@ -73,8 +73,20 @@ workbox.precaching.precacheAndRoute([
     "revision": "d898b3fb071b8961d127a5ae3115e6e0"
   },
   {
+    "url": "main.js",
+    "revision": "80846bb3403b82a07c7f84658f186b23"
+  },
+  {
+    "url": "polyfills.js",
+    "revision": "56f34b0f4d3a42d45bfdb1782adaa173"
+  },
+  {
     "url": "pwacompat.min.js",
     "revision": "038770ef3eb91f3e8a50a3916cb7cf28"
+  },
+  {
+    "url": "runtime.js",
+    "revision": "cd1ce3e306bf57f272364d1cc0249d6e"
   },
   {
     "url": "update.js",
