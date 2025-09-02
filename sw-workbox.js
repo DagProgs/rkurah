@@ -26,47 +26,27 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "5e39953e3671bc6aff906f97173f85bf"
+    "revision": "8753e55a40b1bc1555c0d582e8b70165"
+  },
+  {
+    "url": "asset-manifest.json",
+    "revision": "0b15fc9bac74fa36c150a3de7db07437"
   },
   {
     "url": "manifest.json",
     "revision": "88d372446303fed9b7ca70f38b347603"
   },
   {
-    "url": "asset-manifest.json",
-    "revision": "c7b8c2d9bfecead8299c614e68903e38"
-  },
-  {
     "url": "times_db.json",
     "revision": "e2b81d43e4d226df790af245d30f0091"
   },
   {
-    "url": "static/css/main.0ad65d1d.css",
-    "revision": "ba1bbe621d15ffbff754cea488570d73"
+    "url": "logo192.png",
+    "revision": "c5d401eb140c47f0d0a1b8880b5c8b49"
   },
   {
-    "url": "static/css/main.0ad65d1d.css.map",
-    "revision": "44340f2906a7ab58e7d50c0a2a72a5d2"
-  },
-  {
-    "url": "static/js/453.7240d997.chunk.js",
-    "revision": "574ba466fbef3962d14d14cdd67d2e23"
-  },
-  {
-    "url": "static/js/453.7240d997.chunk.js.map",
-    "revision": "cad9286f09302279362593856a291a6f"
-  },
-  {
-    "url": "static/js/main.7984277d.js",
-    "revision": "3ff40be7ce9df3b628c9bd2ffde5b5e2"
-  },
-  {
-    "url": "static/js/main.7984277d.js.LICENSE.txt",
-    "revision": "cccfa45cda3f72c4ebb3fb2f4ba53a71"
-  },
-  {
-    "url": "static/js/main.7984277d.js.map",
-    "revision": "02dde76ace7974bb0aa5d666408d142b"
+    "url": "logo512.png",
+    "revision": "84f212482ada6ec3913a2a76d4b89c0d"
   },
   {
     "url": "css/style.css",
@@ -147,6 +127,34 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "img/svg/sunrise.svg",
     "revision": "22856041e45fb64976eb29f9697ce61b"
+  },
+  {
+    "url": "static/css/main.591be45b.css",
+    "revision": "70b96674d27f35d5ee27d65332b464ef"
+  },
+  {
+    "url": "static/css/main.591be45b.css.map",
+    "revision": "aeb74a8bd325bdd919f393efbbae2b12"
+  },
+  {
+    "url": "static/js/453.7240d997.chunk.js",
+    "revision": "574ba466fbef3962d14d14cdd67d2e23"
+  },
+  {
+    "url": "static/js/453.7240d997.chunk.js.map",
+    "revision": "cad9286f09302279362593856a291a6f"
+  },
+  {
+    "url": "static/js/main.c656c62a.js",
+    "revision": "22e86c57a15e6b1503305f7924ff86b8"
+  },
+  {
+    "url": "static/js/main.c656c62a.js.LICENSE.txt",
+    "revision": "cccfa45cda3f72c4ebb3fb2f4ba53a71"
+  },
+  {
+    "url": "static/js/main.c656c62a.js.map",
+    "revision": "7e9202b9daf4da88596092ba17608b6f"
   }
 ]);
 
