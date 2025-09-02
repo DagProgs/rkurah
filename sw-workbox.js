@@ -26,15 +26,15 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "e9e81e0350a8f445c3b2a8a258d0816a"
+    "revision": "5e39953e3671bc6aff906f97173f85bf"
   },
   {
     "url": "asset-manifest.json",
-    "revision": "0b15fc9bac74fa36c150a3de7db07437"
+    "revision": "dad88b7994b865fe9264937597790c9a"
   },
   {
     "url": "manifest.json",
-    "revision": "cee6a9d455c94fb81116066ec8294fff"
+    "revision": "bf9a96b6ccca448a39096e57122cf00f"
   },
   {
     "url": "times_db.json",
@@ -54,7 +54,23 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "main.js",
-    "revision": "2f6470e2a31693d8c2c41ce46f527b2b"
+    "revision": "80846bb3403b82a07c7f84658f186b23"
+  },
+  {
+    "url": "polyfills.js",
+    "revision": "56f34b0f4d3a42d45bfdb1782adaa173"
+  },
+  {
+    "url": "pwacompat.min.js",
+    "revision": "038770ef3eb91f3e8a50a3916cb7cf28"
+  },
+  {
+    "url": "runtime.js",
+    "revision": "cd1ce3e306bf57f272364d1cc0249d6e"
+  },
+  {
+    "url": "update.js",
+    "revision": "2e37a1e61c0f6c88bddbb61150536944"
   },
   {
     "url": "img/icons/icon-128x128.png",
@@ -113,32 +129,32 @@ workbox.precaching.precacheAndRoute([
     "revision": "22856041e45fb64976eb29f9697ce61b"
   },
   {
-    "url": "static/css/main.591be45b.css",
-    "revision": "70b96674d27f35d5ee27d65332b464ef"
+    "url": "static/css/main.0ad65d1d.css",
+    "revision": "152f4abffa41e61fd77b7b6e9f5193dd"
   },
   {
-    "url": "static/css/main.591be45b.css.map",
-    "revision": "aeb74a8bd325bdd919f393efbbae2b12"
+    "url": "static/css/main.0ad65d1d.css.map",
+    "revision": "44340f2906a7ab58e7d50c0a2a72a5d2"
   },
   {
     "url": "static/js/453.7240d997.chunk.js",
-    "revision": "574ba466fbef3962d14d14cdd67d2e23"
+    "revision": "6c8cfc4b24a06411f0312fded83ee1cc"
   },
   {
     "url": "static/js/453.7240d997.chunk.js.map",
     "revision": "cad9286f09302279362593856a291a6f"
   },
   {
-    "url": "static/js/main.c656c62a.js",
-    "revision": "22e86c57a15e6b1503305f7924ff86b8"
+    "url": "static/js/main.7984277d.js",
+    "revision": "d257dabdd5959a2e594032d8cc578316"
   },
   {
-    "url": "static/js/main.c656c62a.js.LICENSE.txt",
-    "revision": "cccfa45cda3f72c4ebb3fb2f4ba53a71"
+    "url": "static/js/main.7984277d.js.LICENSE.txt",
+    "revision": "acca7eb9efd385a84b248e43accaa62b"
   },
   {
-    "url": "static/js/main.c656c62a.js.map",
-    "revision": "7e9202b9daf4da88596092ba17608b6f"
+    "url": "static/js/main.7984277d.js.map",
+    "revision": "02dde76ace7974bb0aa5d666408d142b"
   }
 ]);
 
