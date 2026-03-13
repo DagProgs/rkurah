@@ -26,23 +26,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "ccb0298420d4e88285f776cd7aaa2071"
-  },
-  {
-    "url": "asset-manifest.json",
-    "revision": "87c8e42486eeedadfadeefa98e46058d"
+    "revision": "25ae22818c5c6cc9bfa3f96b03e5bfcd"
   },
   {
     "url": "manifest.json",
-    "revision": "6406f317a257f9d0c540e8c6e742da4f"
-  },
-  {
-    "url": "times_db.json",
-    "revision": "e2b81d43e4d226df790af245d30f0091"
-  },
-  {
-    "url": "css/style.css",
-    "revision": "6a3a178d905ed86e3d7f91fd6e123ae7"
+    "revision": "d5243413b3d980d3378e2cb5b9483642"
   },
   {
     "url": "main.js",
@@ -65,96 +53,52 @@ workbox.precaching.precacheAndRoute([
     "revision": "2e37a1e61c0f6c88bddbb61150536944"
   },
   {
-    "url": "logo192.png",
-    "revision": "c5d401eb140c47f0d0a1b8880b5c8b49"
+    "url": "assets/css/style.css",
+    "revision": "814b8e7282be1cac4198e42b9f780941"
   },
   {
-    "url": "logo512.png",
-    "revision": "84f212482ada6ec3913a2a76d4b89c0d"
+    "url": "assets/db/times_db.json",
+    "revision": "1ce3a6a1c42ffc51e273f7cdca350ef2"
   },
   {
-    "url": "img/icons/icon-128x128.png",
+    "url": "assets/icons/icon-128x128.png",
     "revision": "25c8eb241d5e0c913da717f6007736b2"
   },
   {
-    "url": "img/icons/icon-144x144.png",
+    "url": "assets/icons/icon-144x144.png",
     "revision": "6e606e6871ccc1fdc7222dee1d72d42e"
   },
   {
-    "url": "img/icons/icon-152x152.png",
+    "url": "assets/icons/icon-152x152.png",
     "revision": "33b8202ee77c28c332a4fa3efee61d34"
   },
   {
-    "url": "img/icons/icon-192x192.png",
+    "url": "assets/icons/icon-192x192.png",
     "revision": "c5d401eb140c47f0d0a1b8880b5c8b49"
   },
   {
-    "url": "img/icons/icon-384x384.png",
+    "url": "assets/icons/icon-384x384.png",
     "revision": "47f069d621e0e363d1f0b560be4335dc"
   },
   {
-    "url": "img/icons/icon-512x512.png",
+    "url": "assets/icons/icon-512x512.png",
     "revision": "84f212482ada6ec3913a2a76d4b89c0d"
   },
   {
-    "url": "img/icons/icon-72x72.png",
+    "url": "assets/icons/icon-72x72.png",
     "revision": "9c82c0475577731db0e52b9fa62e8c05"
   },
   {
-    "url": "img/icons/icon-96x96.png",
+    "url": "assets/icons/icon-96x96.png",
     "revision": "9815fb3c4b57df1e8cda23d01fc66078"
   },
   {
-    "url": "img/svg/asr.svg",
-    "revision": "3846925b742c58557aca26b8767949bd"
+    "url": "assets/js/jquery.min.js",
+    "revision": "dc5e7f18c8d36ac1d3d4753a87c98d0a"
   },
   {
-    "url": "img/svg/dhuhr.svg",
-    "revision": "dabd6c8ae3693304a022ce4eb9babd8b"
-  },
-  {
-    "url": "img/svg/fajr.svg",
-    "revision": "38d9b75677492b00774b86813a622c6b"
-  },
-  {
-    "url": "img/svg/isha.svg",
-    "revision": "58098ef90128c1e040a909c2386bcccf"
-  },
-  {
-    "url": "img/svg/magrib.svg",
-    "revision": "647773c30b98f9a7f002602d6e54595b"
-  },
-  {
-    "url": "img/svg/sunrise.svg",
-    "revision": "22856041e45fb64976eb29f9697ce61b"
-  },
-  {
-    "url": "static/css/main.c6fab932.css",
-    "revision": "34519527fdaf346c366f1a3de472a3cd"
-  },
-  {
-    "url": "static/css/main.c6fab932.css.map",
-    "revision": "f3c39f9996e833a39464b4dcab5883bb"
-  },
-  {
-    "url": "static/js/453.7240d997.chunk.js",
-    "revision": "574ba466fbef3962d14d14cdd67d2e23"
-  },
-  {
-    "url": "static/js/453.7240d997.chunk.js.map",
-    "revision": "cad9286f09302279362593856a291a6f"
-  },
-  {
-    "url": "static/js/main.d391e9c8.js",
-    "revision": "151223fca03f70bffd5a7903978bfd45"
-  },
-  {
-    "url": "static/js/main.d391e9c8.js.LICENSE.txt",
-    "revision": "cccfa45cda3f72c4ebb3fb2f4ba53a71"
-  },
-  {
-    "url": "static/js/main.d391e9c8.js.map",
-    "revision": "77752c84d0a580d6097b6502db6e2e49"
+    "url": "assets/js/script.js",
+    "revision": "1e430d7d5431a693ccf0a505a5eefa90"
   }
 ]);
 
