@@ -4,7 +4,7 @@ importScripts('workbox-v4.3.1/workbox-sw.js');
 
 // Path prefix to load modules locally
 workbox.setConfig({
-  modulePathPrefix: 'workbox-v4.3.1/''
+  modulePathPrefix: 'workbox-v4.3.1/'
 });
 
 // Turn on logging
@@ -26,11 +26,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "ae975841d2ba0d7b2df07edcac97a46a"
+    "revision": "696321a62d0f67bc5c5c1ff770b7727d"
   },
   {
     "url": "manifest.json",
-    "revision": "74a76d096dc55e847cee8da9a488c5ac"
+    "revision": "a6b8967ee19cbd768b48fedba5ed1989"
   },
   {
     "url": "main.js",
