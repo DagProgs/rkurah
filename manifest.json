@@ -49,9 +49,9 @@
       "type": "image/png"
     }
   ],
-  "scope": "https://dagprogs.github.io/ruznamaKurah/",
+  "scope": "https://rkurah.vercel.app/",
   "id": "ruznamakurah",
-  "start_url": "https://dagprogs.github.io/ruznamaKurah/",
+  "start_url": "https://rkurah.vercel.app/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#ffffff",
