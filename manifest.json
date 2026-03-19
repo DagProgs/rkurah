@@ -1,16 +1,12 @@
 {
+  "manifest_version": 3,
   "lang": "ru",
-  "name": "Рузнама Курахский район",
-  "short_name": "Рузнама Курах",
-  "description": "Точное время намазов для Курахского района офлайн",
-  "id": "/",
-  "start_url": "/",
-  "scope": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#252e49",
-  "background_color": "#ffffff",
-  "categories": ["lifestyle", "utilities"],
+  "dir": "ltr",
+  "name": "Курахский район",
+  "short_name": "Рузнама Курахский р-он",
+  "description": "Времена Намазов для Курахского района",
+  "version": "0.0.23",
+  "categories": ["ruznama", "religion", "prayer", "Рузнама", "Курахский район"],
   "icons": [
 	{
       "src": "assets/icons/icon-72x72.png",
@@ -53,22 +49,11 @@
       "type": "image/png"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Время на сегодня",
-      "short_name": "Сегодня",
-      "description": "Посмотреть расписание намазов на текущий день",
-      "url": "/ruznamaKurah/index.html#today",
-      "icons": [{ "src": "assets/icons/icon-96x96.png", "sizes": "96x96" }]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "assets/screenshots/screen-mobile.png",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Расписание намазов в Курахе"
-    }
-  ]
+  "scope": "https://rkurah.vercel.app/",
+  "id": "ruznamakurah",
+  "start_url": "https://rkurah.vercel.app/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff"
 }

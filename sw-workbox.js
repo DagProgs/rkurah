@@ -1,41 +1,36 @@
-/**
- * Сначала загружаем ядро Workbox. 
- * ПУТЬ ДОЛЖЕН БЫТЬ ОТ КОРНЯ: /workbox-v4.3.1/
- */
-try {
-  importScripts('/workbox-v4.3.1/workbox-sw.js');
-} catch (e) {
-  console.error("Критическая ошибка: Workbox не загружен. Проверьте наличие папки /workbox-v4.3.1/ в корне проекта.");
-}
+importScripts('workbox-v4.3.1/workbox-sw.js');
 
-if (typeof workbox !== 'undefined') {
-  // Настройки путей для модулей
-  workbox.setConfig({
-    modulePathPrefix: '/workbox-v4.3.1/',
-    debug: false
-  });
+// SETTINGS
 
-  // Немедленная активация новой версии
-  workbox.core.skipWaiting();
-  workbox.core.clientsClaim();
+// Path prefix to load modules locally
+workbox.setConfig({
+  modulePathPrefix: 'workbox-v4.3.1/'
+});
 
-  /**
-   * ПРЕКЕШИНГ
-   * Сюда команда "node ./workbox-build-inject.js" вставит список ваших файлов.
-   * Эту строку НЕЛЬЗЯ удалять или менять вручную.
-   */
-  workbox.precaching.precacheAndRoute([
+// Turn on logging
+workbox.setConfig({
+  debug: true
+});
+
+// Updating SW lifecycle to update the app after user triggered refresh
+workbox.core.skipWaiting();
+workbox.core.clientsClaim();
+
+// PRECACHING
+
+// We inject manifest here using "workbox-build" in workbox-build-inject.js
+workbox.precaching.precacheAndRoute([
   {
     "url": "favicon.ico",
     "revision": "646e4795859859204f87e131fefc05b7"
   },
   {
     "url": "index.html",
-    "revision": "039b26057869de30d64631ca052771af"
+    "revision": "696321a62d0f67bc5c5c1ff770b7727d"
   },
   {
     "url": "manifest.json",
-    "revision": "f67341634a288790abf3c90942fe69ca"
+    "revision": "417d3be3996b43b563498d15e2e1509b"
   },
   {
     "url": "main.js",
@@ -55,11 +50,11 @@ if (typeof workbox !== 'undefined') {
   },
   {
     "url": "update.js",
-    "revision": "e9ffcaee24be4c0c7f86539a18e53a7e"
+    "revision": "480b238fd3de4af93586d44d32dc8530"
   },
   {
     "url": "assets/css/style.css",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "814b8e7282be1cac4198e42b9f780941"
   },
   {
     "url": "assets/db/times_db.json",
@@ -103,109 +98,44 @@ if (typeof workbox !== 'undefined') {
   },
   {
     "url": "assets/js/script.js",
-    "revision": "d41d8cd98f00b204e9800998ecf8427e"
+    "revision": "1e430d7d5431a693ccf0a505a5eefa90"
   },
   {
     "url": "assets/js/theme.js",
     "revision": "d8770a864f98242490bdf29913b97ca3"
-  },
-  {
-    "url": "assets/screenshots/screen-mobile.png",
-    "revision": "6db64c78e742f352e3118dcdb3140c54"
   }
 ]);
 
-  /**
-   * КЕШИРОВАНИЕ ДАННЫХ (JSON с временем намаза)
-   */
-  workbox.routing.registerRoute(
-    /.*times_db\.json/,
-    new workbox.strategies.NetworkFirst({
-      cacheName: 'ruznama-db-cache'
-    })
-  );
+// RUNTIME CACHING
 
-  /**
-   * КЕШИРОВАНИЕ ШРИФТОВ (Google Fonts)
-   */
-  workbox.routing.registerRoute(
-    /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/,
-    new workbox.strategies.StaleWhileRevalidate({
-      cacheName: 'google-fonts-cache'
-    })
-  );
-
-  /**
-   * ЛОГИКА УВЕДОМЛЕНИЙ (АЗАН)
-   */
-  async function checkPrayerTimes() {
-    try {
-      const response = await fetch('/assets/db/times_db.json');
-      if (!response.ok) return;
-      
-      const allTimes = await response.json();
-      const now = new Date();
-      
-      const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"];
-      
-      const currentMonth = monthNames[now.getMonth()];
-      const currentDay = String(now.getDate()).padStart(2, '0');
-      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-      const today = allTimes[currentMonth]?.[currentDay];
-      if (!today) return;
-
-      const prayers = {
-        "Фаджр": today.Fajr,
-        "Зухр": today.Dhuhr,
-        "Аср": today.Asr,
-        "Магриб": today.Maghrib,
-        "Иша": today.Isha
-      };
-
-      for (const [name, time] of Object.entries(prayers)) {
-        if (currentTime === time) {
-          self.registration.showNotification(`Время намаза: ${name}`, {
-            body: `Пришло время молитвы ${name} (${time})`,
-            icon: '/assets/icons/icon-192x192.png',
-            badge: '/assets/icons/icon-72x72.png',
-            vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 450],
-            tag: `azan-${name}`,
-            renotify: true,
-            data: { url: '/' }
-          });
-        }
-      }
-    } catch (e) {
-      console.error("Ошибка в checkPrayerTimes:", e);
-    }
-  }
-
-  /**
-   * ОБРАБОТКА СОБЫТИЙ
-   */
-
-  // Слушаем сигнал от update.js (TICK)
-  self.addEventListener('message', (event) => {
-    if (event.data && (event.data.type === 'TICK' || event.data.type === 'CHECK_PRAYER')) {
-      event.waitUntil(checkPrayerTimes());
-    }
-  });
-
-  // Клик по уведомлению — открываем или фокусируем приложение
-  self.addEventListener('notificationclick', (event) => {
-    event.notification.close();
-    event.waitUntil(
-      clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-        for (let client of windowClients) {
-          if (client.url === '/' && 'focus' in client) return client.focus();
-        }
-        if (clients.openWindow) return clients.openWindow('/');
+// Google fonts
+workbox.routing.registerRoute(
+  new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
+  new workbox.strategies.StaleWhileRevalidate({
+    cacheName: 'googleapis',
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 30
       })
-    );
-  });
+    ]
+  })
+);
 
-} else {
-  console.error("Workbox не определен. Проверьте правильность загрузки скриптов.");
-}
+// API with network-first strategy
+workbox.routing.registerRoute(
+  /(http[s]?:\/\/)?([^\/\s]+\/)timeline/,
+  workbox.strategies.networkFirst()
+)
+
+// API with cache-first strategy
+workbox.routing.registerRoute(
+  /(http[s]?:\/\/)?([^\/\s]+\/)favorites/,
+  workbox.strategies.cacheFirst()
+)
+
+// OTHER EVENTS
+
+// Receive push and show a notification
+self.addEventListener('push', function(event) {
+  console.log('[Service Worker]: Received push event', event);
+});
