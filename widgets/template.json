@@ -1,0 +1,14 @@
+{
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body":
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "Открыть Рузнаму",
+      "url": "https://rkurah.vercel.app/"
+    }
+  ]
+}
