@@ -134,7 +134,7 @@ let lastNotifiedTime = ""; // Защита от двойных уведомле�
 async function checkPrayerTimes() {
   try {
     // ИСПРАВЛЕНО: Прямые слеши для путей в вебе
-    const response = await fetch('./assets/db/times_db.json'); 
+    const response = await fetch('assets/db/times_db.json'); 
     if (!response.ok) return;
     
     const allTimes = await response.json();
