@@ -18,7 +18,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "aa5e45592a0f6223179ee0e30d01dde8"
+    "revision": "5a17b71f932f710f30e827644ff4ed46"
   },
   {
     "url": "manifest.json",
@@ -54,7 +54,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "assets/css/style.css",
-    "revision": "6b3b13fba08f2a61674053b635b7f161"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "assets/db/times_db.json",
@@ -98,7 +98,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "assets/js/script.js",
-    "revision": "ddda6e61c9393d8715c942b00bc79b50"
+    "revision": "d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "url": "assets/js/theme.js",
