@@ -1,24 +1,48 @@
+// 1. Импортируем Firebase 8.10.1 и Workbox
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
 importScripts('workbox-v4.3.1/workbox-sw.js');
 
-// SETTINGS
+// 2. Инициализация из параметров URL (переданных из .env)
+const urlParams = new URLSearchParams(self.location.search);
+const fbConfigJson = urlParams.get('fbConfig');
 
-// Path prefix to load modules locally
-workbox.setConfig({
-  modulePathPrefix: 'workbox-v4.3.1/'
-});
+if (fbConfigJson) {
+  const firebaseConfig = JSON.parse(decodeURIComponent(fbConfigJson));
+  
+  // Инициализируем приложение Firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  // Инициализируем Messaging
+  const messaging = firebase.messaging();
 
-// Turn on logging
+  // Обработчик фоновых уведомлений
+  messaging.onBackgroundMessage((payload) => {
+    console.log('[SW]: Получено фоновое сообщение', payload);
+
+    const notificationTitle = payload.notification.title || 'Новое сообщение';
+    const notificationOptions = {
+      body: payload.notification.body,
+      icon: '/icon-192x192.png', // путь к твоей иконке
+      badge: '/badge.png',        // маленькая иконка в статус-баре
+      data: payload.data
+    };
+
+    self.registration.showNotification(notificationTitle, notificationOptions);
+  });
+}
+
+// --- НАСТРОЙКИ WORKBOX ---
+
 workbox.setConfig({
+  modulePathPrefix: 'workbox-v4.3.1/',
   debug: true
 });
 
-// Updating SW lifecycle to update the app after user triggered refresh
 workbox.core.skipWaiting();
 workbox.core.clientsClaim();
 
-// PRECACHING
-
-// We inject manifest here using "workbox-build" in workbox-build-inject.js
+// Прекешинг (заполняется автоматически через workbox-build)
 workbox.precaching.precacheAndRoute([
   {
     "url": "favicon.ico",
@@ -26,7 +50,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "696321a62d0f67bc5c5c1ff770b7727d"
+    "revision": "e8fa5f3c675278b2cb42ed16811f5e1a"
   },
   {
     "url": "manifest.json",
@@ -54,7 +78,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "assets/css/style.css",
-    "revision": "814b8e7282be1cac4198e42b9f780941"
+    "revision": "6b3b13fba08f2a61674053b635b7f161"
   },
   {
     "url": "assets/db/times_db.json",
@@ -98,7 +122,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "assets/js/script.js",
-    "revision": "1e430d7d5431a693ccf0a505a5eefa90"
+    "revision": "ddda6e61c9393d8715c942b00bc79b50"
   },
   {
     "url": "assets/js/theme.js",
@@ -106,36 +130,33 @@ workbox.precaching.precacheAndRoute([
   }
 ]);
 
-// RUNTIME CACHING
-
-// Google fonts
+// Кеширование шрифтов Google
 workbox.routing.registerRoute(
   new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: 'googleapis',
     plugins: [
-      new workbox.expiration.Plugin({
-        maxEntries: 30
-      })
+      new workbox.expiration.Plugin({ maxEntries: 30 })
     ]
   })
 );
 
-// API with network-first strategy
+// API: Timeline (Network First)
 workbox.routing.registerRoute(
   /(http[s]?:\/\/)?([^\/\s]+\/)timeline/,
   workbox.strategies.networkFirst()
-)
+);
 
-// API with cache-first strategy
+// API: Favorites (Cache First)
 workbox.routing.registerRoute(
   /(http[s]?:\/\/)?([^\/\s]+\/)favorites/,
   workbox.strategies.cacheFirst()
-)
+);
 
-// OTHER EVENTS
-
-// Receive push and show a notification
-self.addEventListener('push', function(event) {
-  console.log('[Service Worker]: Received push event', event);
+// Клик по уведомлению
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('/') 
+  );
 });
