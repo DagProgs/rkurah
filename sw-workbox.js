@@ -1,19 +1,30 @@
-// 1. Загрузка локального Workbox (путь должен быть точным!)
-importScripts('/workbox-v4.3.1/workbox-sw.js');
+/**
+ * Сначала загружаем ядро Workbox. 
+ * ПУТЬ ДОЛЖЕН БЫТЬ ОТ КОРНЯ: /workbox-v4.3.1/
+ */
+try {
+  importScripts('/workbox-v4.3.1/workbox-sw.js');
+} catch (e) {
+  console.error("Критическая ошибка: Workbox не загружен. Проверьте наличие папки /workbox-v4.3.1/ в корне проекта.");
+}
 
-// 2. Конфигурация локальных модулей
-workbox.setConfig({
-  modulePathPrefix: '/workbox-v4.3.1/',
-  debug: false
-});
+if (typeof workbox !== 'undefined') {
+  // Настройки путей для модулей
+  workbox.setConfig({
+    modulePathPrefix: '/workbox-v4.3.1/',
+    debug: false
+  });
 
-// Жизненный цикл: немедленная активация
-workbox.core.skipWaiting();
-workbox.core.clientsClaim();
+  // Немедленная активация новой версии
+  workbox.core.skipWaiting();
+  workbox.core.clientsClaim();
 
-// 3. ПРЕКЕШИНГ (Сюда node инъектирует файлы)
-// На iPhone это критично: если файл не в прекеше, PWA не откроется офлайн
-workbox.precaching.precacheAndRoute([
+  /**
+   * ПРЕКЕШИНГ
+   * Сюда команда "node ./workbox-build-inject.js" вставит список ваших файлов.
+   * Эту строку НЕЛЬЗЯ удалять или менять вручную.
+   */
+  workbox.precaching.precacheAndRoute([
   {
     "url": "favicon.ico",
     "revision": "646e4795859859204f87e131fefc05b7"
@@ -104,75 +115,97 @@ workbox.precaching.precacheAndRoute([
   }
 ]);
 
-// 4. КЕШИРОВАНИЕ ДАННЫХ (Runtime)
-// Кешируем базу времен намаза (NetworkFirst — сначала сеть, потом кеш)
-workbox.routing.registerRoute(
-  /.*times_db\.json/,
-  new workbox.strategies.NetworkFirst({
-    cacheName: 'ruznama-data'
-  })
-);
-
-// 5. ЛОГИКА УВЕДОМЛЕНИЙ (Азан)
-async function checkPrayerTimes() {
-  try {
-    // Важно: на Vercel лучше использовать абсолютный путь от корня /
-    const response = await fetch('/assets/db/times_db.json');
-    if (!response.ok) return;
-    const allTimes = await response.json();
-
-    const now = new Date();
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const currentMonth = monthNames[now.getMonth()];
-    const currentDay = String(now.getDate()).padStart(2, '0');
-    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-    const today = allTimes[currentMonth]?.[currentDay];
-    if (!today) return;
-
-    const prayers = { 
-      "Фаджр": today.Fajr, 
-      "Зухр": today.Dhuhr, 
-      "Аср": today.Asr, 
-      "Магриб": today.Maghrib, 
-      "Иша": today.Isha 
-    };
-
-    for (const [name, time] of Object.entries(prayers)) {
-      if (currentTime === time) {
-        self.registration.showNotification(`Намаз: ${name}`, {
-          body: `Время молитвы ${name} (${time})`,
-          icon: '/assets/icons/icon-192x192.png',
-          badge: '/assets/icons/icon-72x72.png',
-          vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40],
-          tag: `azan-${name}`,
-          renotify: true,
-          data: { url: '/' }
-        });
-      }
-    }
-  } catch (e) {
-    console.log("Check error:", e);
-  }
-}
-
-// 6. ОБРАБОТКА СОБЫТИЙ
-// Слушаем "TICK" от основного окна (update.js)
-self.addEventListener('message', (event) => {
-  if (event.data && (event.data.type === 'TICK' || event.data.type === 'CHECK_PRAYER')) {
-    event.waitUntil(checkPrayerTimes());
-  }
-});
-
-// Клик по уведомлению
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientsList => {
-      for (const client of clientsList) {
-        if (client.url === '/' && 'focus' in client) return client.focus();
-      }
-      if (clients.openWindow) return clients.openWindow('/');
+  /**
+   * КЕШИРОВАНИЕ ДАННЫХ (JSON с временем намаза)
+   */
+  workbox.routing.registerRoute(
+    /.*times_db\.json/,
+    new workbox.strategies.NetworkFirst({
+      cacheName: 'ruznama-db-cache'
     })
   );
-});
+
+  /**
+   * КЕШИРОВАНИЕ ШРИФТОВ (Google Fonts)
+   */
+  workbox.routing.registerRoute(
+    /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/,
+    new workbox.strategies.StaleWhileRevalidate({
+      cacheName: 'google-fonts-cache'
+    })
+  );
+
+  /**
+   * ЛОГИКА УВЕДОМЛЕНИЙ (АЗАН)
+   */
+  async function checkPrayerTimes() {
+    try {
+      const response = await fetch('/assets/db/times_db.json');
+      if (!response.ok) return;
+      
+      const allTimes = await response.json();
+      const now = new Date();
+      
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+      
+      const currentMonth = monthNames[now.getMonth()];
+      const currentDay = String(now.getDate()).padStart(2, '0');
+      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const today = allTimes[currentMonth]?.[currentDay];
+      if (!today) return;
+
+      const prayers = {
+        "Фаджр": today.Fajr,
+        "Зухр": today.Dhuhr,
+        "Аср": today.Asr,
+        "Магриб": today.Maghrib,
+        "Иша": today.Isha
+      };
+
+      for (const [name, time] of Object.entries(prayers)) {
+        if (currentTime === time) {
+          self.registration.showNotification(`Время намаза: ${name}`, {
+            body: `Пришло время молитвы ${name} (${time})`,
+            icon: '/assets/icons/icon-192x192.png',
+            badge: '/assets/icons/icon-72x72.png',
+            vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 450],
+            tag: `azan-${name}`,
+            renotify: true,
+            data: { url: '/' }
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Ошибка в checkPrayerTimes:", e);
+    }
+  }
+
+  /**
+   * ОБРАБОТКА СОБЫТИЙ
+   */
+
+  // Слушаем сигнал от update.js (TICK)
+  self.addEventListener('message', (event) => {
+    if (event.data && (event.data.type === 'TICK' || event.data.type === 'CHECK_PRAYER')) {
+      event.waitUntil(checkPrayerTimes());
+    }
+  });
+
+  // Клик по уведомлению — открываем или фокусируем приложение
+  self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+      clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+        for (let client of windowClients) {
+          if (client.url === '/' && 'focus' in client) return client.focus();
+        }
+        if (clients.openWindow) return clients.openWindow('/');
+      })
+    );
+  });
+
+} else {
+  console.error("Workbox не определен. Проверьте правильность загрузки скриптов.");
+}
