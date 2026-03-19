@@ -1,15 +1,18 @@
+// 1. Загрузка локального Workbox (путь должен быть точным!)
 importScripts('workbox-v4.3.1/workbox-sw.js');
 
-// 1. НАСТРОЙКИ (Локальные модули)
+// 2. Конфигурация локальных модулей
 workbox.setConfig({
   modulePathPrefix: 'workbox-v4.3.1/',
-  debug: false // Выключаем debug для продакшена
+  debug: false
 });
 
+// Жизненный цикл: немедленная активация
 workbox.core.skipWaiting();
 workbox.core.clientsClaim();
 
-// 2. ПРЕКЕШИНГ (Сюда injectManifest вставит файлы)
+// 3. ПРЕКЕШИНГ (Сюда node инъектирует файлы)
+// На iPhone это критично: если файл не в прекеше, PWA не откроется офлайн
 workbox.precaching.precacheAndRoute([
   {
     "url": "favicon.ico",
@@ -17,11 +20,11 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "5a17b71f932f710f30e827644ff4ed46"
+    "revision": "62f212fc8bb2287e5165f933c8660b84"
   },
   {
     "url": "manifest.json",
-    "revision": "4e28da2121bf1257c7100c83916fef7c"
+    "revision": "f67341634a288790abf3c90942fe69ca"
   },
   {
     "url": "main.js",
@@ -41,15 +44,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "update.js",
-    "revision": "f1cdf9e7a7b34a73c0b218b55c04d188"
-  },
-  {
-    "url": "widgets/data.json",
-    "revision": "a1fd6092bb8b0df9b607a15c0c4508d1"
-  },
-  {
-    "url": "widgets/template.json",
-    "revision": "0d9b333e6e18211b65399713cd9ea42c"
+    "revision": "e9ffcaee24be4c0c7f86539a18e53a7e"
   },
   {
     "url": "assets/css/style.css",
@@ -109,17 +104,8 @@ workbox.precaching.precacheAndRoute([
   }
 ]);
 
-// 3. КЕШИРОВАНИЕ (Runtime)
-// Шрифты Google
-workbox.routing.registerRoute(
-  new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'googleapis',
-    plugins: [new workbox.expiration.Plugin({ maxEntries: 30 })]
-  })
-);
-
-// Кеш для JSON базы времен (важно для офлайна)
+// 4. КЕШИРОВАНИЕ ДАННЫХ (Runtime)
+// Кешируем базу времен намаза (NetworkFirst — сначала сеть, потом кеш)
 workbox.routing.registerRoute(
   /.*times_db\.json/,
   new workbox.strategies.NetworkFirst({
@@ -127,11 +113,10 @@ workbox.routing.registerRoute(
   })
 );
 
-// 4. ЛОГИКА АЗАНА (Уведомления)
-
+// 5. ЛОГИКА УВЕДОМЛЕНИЙ (Азан)
 async function checkPrayerTimes() {
   try {
-    // Путь должен быть от корня сайта
+    // Важно: на Vercel лучше использовать абсолютный путь от корня /
     const response = await fetch('/assets/db/times_db.json');
     if (!response.ok) return;
     const allTimes = await response.json();
@@ -145,15 +130,21 @@ async function checkPrayerTimes() {
     const today = allTimes[currentMonth]?.[currentDay];
     if (!today) return;
 
-    const prayers = { "Фаджр": today.Fajr, "Зухр": today.Dhuhr, "Аср": today.Asr, "Магриб": today.Maghrib, "Иша": today.Isha };
+    const prayers = { 
+      "Фаджр": today.Fajr, 
+      "Зухр": today.Dhuhr, 
+      "Аср": today.Asr, 
+      "Магриб": today.Maghrib, 
+      "Иша": today.Isha 
+    };
 
     for (const [name, time] of Object.entries(prayers)) {
       if (currentTime === time) {
-        self.registration.showNotification(`Время намаза: ${name}`, {
-          body: `Пришло время молитвы ${name} (${time})`,
+        self.registration.showNotification(`Намаз: ${name}`, {
+          body: `Время молитвы ${name} (${time})`,
           icon: '/assets/icons/icon-192x192.png',
           badge: '/assets/icons/icon-72x72.png',
-          vibrate: [500, 200, 500],
+          vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40],
           tag: `azan-${name}`,
           renotify: true,
           data: { url: '/' }
@@ -161,34 +152,27 @@ async function checkPrayerTimes() {
       }
     }
   } catch (e) {
-    console.error("Ошибка проверки времени:", e);
+    console.log("Check error:", e);
   }
 }
 
-// 5. ОБРАБОТЧИКИ СОБЫТИЙ
-
-// Слушаем "пульс" от основного окна (TICK)
+// 6. ОБРАБОТКА СОБЫТИЙ
+// Слушаем "TICK" от основного окна (update.js)
 self.addEventListener('message', (event) => {
   if (event.data && (event.data.type === 'TICK' || event.data.type === 'CHECK_PRAYER')) {
     event.waitUntil(checkPrayerTimes());
   }
 });
 
-// Клик по уведомлению — открываем сайт
+// Клик по уведомлению
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
-      for (var i = 0; i < windowClients.length; i++) {
-        var client = windowClients[i];
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientsList => {
+      for (const client of clientsList) {
         if (client.url === '/' && 'focus' in client) return client.focus();
       }
       if (clients.openWindow) return clients.openWindow('/');
     })
   );
-});
-
-// Для Push (если будет сервер)
-self.addEventListener('push', function(event) {
-  console.log('[Service Worker]: Received push event', event);
 });

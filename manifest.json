@@ -3,9 +3,9 @@
   "name": "Рузнама Курахский район",
   "short_name": "Рузнама Курах",
   "description": "Точное время намазов для Курахского района офлайн",
-  "id": "ruznamaKurah",
-  "start_url": "https://rkurah.vercel.app/",
-  "scope": "https://rkurah.vercel.app/",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#252e49",
@@ -51,14 +51,6 @@
       "src": "assets/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
-    }
-  ],
-  "widgets": [
-    {
-      "tag": "prayer-times",
-      "ms_ac_template": "widgets/template.json",
-      "data": "widgets/data.json",
-      "type": "application/json"
     }
   ],
   "shortcuts": [
