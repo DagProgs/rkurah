@@ -1,16 +1,6 @@
-importScripts('workbox-v4.3.1/workbox-sw.js');
+importScripts('https://storage.googleapis.com');
 
-// 1. НАСТРОЙКИ
-workbox.setConfig({
-  modulePathPrefix: 'workbox-v4.3.1/',
-  debug: false // Поменял на false, чтобы консоль не засорялась
-});
-
-workbox.core.skipWaiting();
-workbox.core.clientsClaim();
-
-// 2. ПРЕКЕШИНГ
-// Сюда ваш сборщик (если есть) вставит манифест. Если правите вручную — оставьте пустой массив.
+// ВАЖНО: Эту строку нельзя менять! Сюда сборщик вставит список файлов
 workbox.precaching.precacheAndRoute([
   {
     "url": "favicon.ico",
@@ -22,7 +12,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "manifest.json",
-    "revision": "2effacd1cbdc8a9489e22c1212291fb1"
+    "revision": "763192c9538cabd5eda364e4c33e90de"
   },
   {
     "url": "main.js",
@@ -42,7 +32,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "update.js",
-    "revision": "9605dad5c22431cfa54760d22705b8d7"
+    "revision": "f1cdf9e7a7b34a73c0b218b55c04d188"
   },
   {
     "url": "widgets/data.json",
@@ -108,104 +98,64 @@ workbox.precaching.precacheAndRoute([
     "url": "assets/screenshots/screen-mobile.png",
     "revision": "6db64c78e742f352e3118dcdb3140c54"
   }
-]);
+]); 
 
-// 3. КЕШИРОВАНИЕ РЕСУРСОВ
+workbox.core.skipWaiting();
+workbox.core.clientsClaim();
+
+// Кеширование внешних шрифтов и JSON данных
 workbox.routing.registerRoute(
-  new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'googleapis'
-  })
+  /.*(?:googleapis|gstatic)\.com/,
+  new workbox.strategies.StaleWhileRevalidate({ cacheName: 'google-fonts' })
 );
 
-// Кешируем JSON с временами намаза
 workbox.routing.registerRoute(
-  /times_db\.json/,
-  new workbox.strategies.NetworkFirst({
-    cacheName: 'ruznama-data'
-  })
+  /.*times_db\.json/,
+  new workbox.strategies.NetworkFirst({ cacheName: 'ruznama-data' })
 );
 
-// --- ЛОГИКА АЗАНА ---
-
-const AZAN_VIBRATION = [500, 200, 500, 200, 800];
-let lastNotifiedTime = ""; // Защита от двойных уведомлений в одну минуту
-
+// Функция проверки времени намаза
 async function checkPrayerTimes() {
   try {
-    // ИСПРАВЛЕНО: Прямые слеши для путей в вебе
-    const response = await fetch('assets/db/times_db.json'); 
+    const response = await fetch('/assets/db/times_db.json');
     if (!response.ok) return;
-    
     const allTimes = await response.json();
-
-    const now = new Date();
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"];
     
+    const now = new Date();
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const currentMonth = monthNames[now.getMonth()];
     const currentDay = String(now.getDate()).padStart(2, '0');
     const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-    // Если в эту минуту уже уведомляли — выходим
-    if (lastNotifiedTime === currentTime) return;
-
-    const today = allTimes[currentMonth][currentDay];
+    const today = allTimes[currentMonth]?.[currentDay];
     if (!today) return;
 
-    const prayers = {
-      "Фаджр": today.Fajr,
-      "Зухр": today.Dhuhr,
-      "Аср": today.Asr,
-      "Магриб": today.Maghrib,
-      "Иша": today.Isha
-    };
+    const prayers = { "Фаджр": today.Fajr, "Зухр": today.Dhuhr, "Аср": today.Asr, "Магриб": today.Maghrib, "Иша": today.Isha };
 
     for (const [name, time] of Object.entries(prayers)) {
       if (currentTime === time) {
-        lastNotifiedTime = currentTime; // Запоминаем, что уведомили
-
         self.registration.showNotification(`Время намаза: ${name}`, {
           body: `Пришло время молитвы ${name} (${time})`,
-          icon: 'assets/icons/icon-192x192.png',
-          vibrate: AZAN_VIBRATION,
-          tag: `azan-${name}`, // Тэг позволяет обновлять уведомление, а не плодить новые
+          icon: '/assets/icons/icon-192x192.png',
+          badge: '/assets/icons/icon-72x72.png',
+          vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 450],
+          tag: `azan-${name}`,
           renotify: true,
-          data: { url: 'index.html' }
+          data: { url: '/' }
         });
       }
     }
-  } catch (e) {
-    console.error("Ошибка проверки времени:", e);
-  }
+  } catch (e) { console.error("SW error:", e); }
 }
 
-// Запуск проверки (работает, пока SW активен)
-setInterval(checkPrayerTimes, 60000);
-
-// --- ОБРАБОТКА СОБЫТИЙ ---
+// Слушаем сигнал от страницы
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'TICK') {
+    checkPrayerTimes();
+  }
+});
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-      // Если сайт уже открыт — просто переключаемся на него
-      for (const client of clientList) {
-        if (client.url.includes('index.html') && 'focus' in client) {
-          return client.focus();
-        }
-      }
-      // Если закрыт — открываем заново
-      if (clients.openWindow) {
-        return clients.openWindow(event.notification.data.url);
-      }
-    })
-  );
-});
-
-// Слушаем сообщения (например, от интервала в основном окне для надежности)
-self.addEventListener('message', (event) => {
-  if (event.data.type === 'CHECK_PRAYER' || event.data.type === 'TICK') {
-    event.waitUntil(checkPrayerTimes());
-  }
+  event.waitUntil(clients.openWindow(event.notification.data.url));
 });

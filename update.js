@@ -1,48 +1,31 @@
-import { Workbox } from 'workbox-v4.3.1/workbox-window.prod.mjs';
-
 if ('serviceWorker' in navigator) {
-    const wb = new Workbox('sw-workbox.js');
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw-workbox.js')
+            .then(reg => {
+                console.log('Service Worker зарегистрирован');
+                
+                // Проверяем время сразу при загрузке
+                if (reg.active) reg.active.postMessage({ type: 'TICK' });
 
-    // 1. Автоматическая перезагрузка при обновлении версии приложения
-    wb.addEventListener('installed', event => {
-        if (event.isUpdate) {
-            // Показываем пользователю уведомление или просто обновляем страницу
-            window.location.reload();
-        }
-    });
-
-    // 2. Регистрация Service Worker
-    wb.register().then(registration => {
-        console.log('SW зарегистрирован успешно');
-        
-        // 3. Запрос прав на уведомления при первом запуске
-        // Важно: в современных браузерах это лучше вызывать по клику на кнопку
-        if (Notification.permission === 'default') {
-            // Можно вызвать функцию уведомления позже по клику пользователя
-            console.log('Нужно запросить разрешение на уведомления');
-        }
-    });
-
-    // 4. Синхронизация с Service Worker при каждой загрузке страницы
-    // Это «разбудит» воркер и заставит его проверить время по вашему times.json
-    navigator.serviceWorker.ready.then(registration => {
-        if (registration.active) {
-            registration.active.postMessage({ type: 'CHECK_PRAYER' });
-        }
+                // Запускаем проверку каждую минуту, пока открыта вкладка
+                setInterval(() => {
+                    navigator.serviceWorker.ready.then(readyReg => {
+                        if (readyReg.active) {
+                            readyReg.active.postMessage({ type: 'TICK' });
+                        }
+                    });
+                }, 60000);
+            })
+            .catch(err => console.log('Ошибка SW:', err));
     });
 }
 
-/**
- * Функция для кнопки "Включить азан" в вашем интерфейсе
- */
-async function enableAzanNotifications() {
+// Функция для вызова по кнопке в HTML
+async function enableNotifications() {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
-        console.log('Уведомления разрешены');
+        alert('Уведомления для Азана включены!');
     } else {
-        alert('Пожалуйста, разрешите уведомления в настройках браузера, чтобы слышать азан.');
+        alert('Пожалуйста, разрешите уведомления в настройках браузера.');
     }
 }
-
-// Экспортируем, если нужно использовать в других модулях
-export { enableAzanNotifications };
