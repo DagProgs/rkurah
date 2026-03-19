@@ -1,9 +1,9 @@
 // 1. Загрузка локального Workbox (путь должен быть точным!)
-importScripts('workbox-v4.3.1/workbox-sw.js');
+importScripts('/workbox-v4.3.1/workbox-sw.js');
 
 // 2. Конфигурация локальных модулей
 workbox.setConfig({
-  modulePathPrefix: 'workbox-v4.3.1/',
+  modulePathPrefix: '/workbox-v4.3.1/',
   debug: false
 });
 
