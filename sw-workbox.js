@@ -31,7 +31,7 @@ if (typeof workbox !== 'undefined') {
   },
   {
     "url": "index.html",
-    "revision": "62f212fc8bb2287e5165f933c8660b84"
+    "revision": "039b26057869de30d64631ca052771af"
   },
   {
     "url": "manifest.json",
