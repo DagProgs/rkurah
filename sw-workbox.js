@@ -167,11 +167,11 @@ async function checkPrayerTimes() {
 
         self.registration.showNotification(`Время намаза: ${name}`, {
           body: `Пришло время молитвы ${name} (${time})`,
-          icon: './assets/icons/icon-192x192.png',
+          icon: 'assets/icons/icon-192x192.png',
           vibrate: AZAN_VIBRATION,
           tag: `azan-${name}`, // Тэг позволяет обновлять уведомление, а не плодить новые
           renotify: true,
-          data: { url: './index.html' }
+          data: { url: 'index.html' }
         });
       }
     }
