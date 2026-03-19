@@ -42,7 +42,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "update.js",
-    "revision": "a62c56d17a57fb4b0de070b5b5d9e437"
+    "revision": "9605dad5c22431cfa54760d22705b8d7"
   },
   {
     "url": "widgets/data.json",
