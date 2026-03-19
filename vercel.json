@@ -1,13 +1,25 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "rewrites": [
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/workbox-v4.3.1/(.*)", "destination": "/workbox-v4.3.1/$1" },
+    { "source": "/sw-workbox.js", "destination": "/sw-workbox.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/sw-workbox.js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
         { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    },
+    {
+      "source": "/assets/db/times_db.json",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "no-cache" }
       ]
     }
   ]

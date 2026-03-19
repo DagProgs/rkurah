@@ -1,6 +1,15 @@
-importScripts('https://storage.googleapis.com');
+importScripts('workbox-v4.3.1/workbox-sw.js');
 
-// ВАЖНО: Эту строку нельзя менять! Сюда сборщик вставит список файлов
+// 1. НАСТРОЙКИ (Локальные модули)
+workbox.setConfig({
+  modulePathPrefix: 'workbox-v4.3.1/',
+  debug: false // Выключаем debug для продакшена
+});
+
+workbox.core.skipWaiting();
+workbox.core.clientsClaim();
+
+// 2. ПРЕКЕШИНГ (Сюда injectManifest вставит файлы)
 workbox.precaching.precacheAndRoute([
   {
     "url": "favicon.ico",
@@ -98,29 +107,35 @@ workbox.precaching.precacheAndRoute([
     "url": "assets/screenshots/screen-mobile.png",
     "revision": "6db64c78e742f352e3118dcdb3140c54"
   }
-]); 
+]);
 
-workbox.core.skipWaiting();
-workbox.core.clientsClaim();
-
-// Кеширование внешних шрифтов и JSON данных
+// 3. КЕШИРОВАНИЕ (Runtime)
+// Шрифты Google
 workbox.routing.registerRoute(
-  /.*(?:googleapis|gstatic)\.com/,
-  new workbox.strategies.StaleWhileRevalidate({ cacheName: 'google-fonts' })
+  new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
+  new workbox.strategies.StaleWhileRevalidate({
+    cacheName: 'googleapis',
+    plugins: [new workbox.expiration.Plugin({ maxEntries: 30 })]
+  })
 );
 
+// Кеш для JSON базы времен (важно для офлайна)
 workbox.routing.registerRoute(
   /.*times_db\.json/,
-  new workbox.strategies.NetworkFirst({ cacheName: 'ruznama-data' })
+  new workbox.strategies.NetworkFirst({
+    cacheName: 'ruznama-data'
+  })
 );
 
-// Функция проверки времени намаза
+// 4. ЛОГИКА АЗАНА (Уведомления)
+
 async function checkPrayerTimes() {
   try {
+    // Путь должен быть от корня сайта
     const response = await fetch('/assets/db/times_db.json');
     if (!response.ok) return;
     const allTimes = await response.json();
-    
+
     const now = new Date();
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const currentMonth = monthNames[now.getMonth()];
@@ -138,24 +153,42 @@ async function checkPrayerTimes() {
           body: `Пришло время молитвы ${name} (${time})`,
           icon: '/assets/icons/icon-192x192.png',
           badge: '/assets/icons/icon-72x72.png',
-          vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 450],
+          vibrate: [500, 200, 500],
           tag: `azan-${name}`,
           renotify: true,
           data: { url: '/' }
         });
       }
     }
-  } catch (e) { console.error("SW error:", e); }
+  } catch (e) {
+    console.error("Ошибка проверки времени:", e);
+  }
 }
 
-// Слушаем сигнал от страницы
+// 5. ОБРАБОТЧИКИ СОБЫТИЙ
+
+// Слушаем "пульс" от основного окна (TICK)
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'TICK') {
-    checkPrayerTimes();
+  if (event.data && (event.data.type === 'TICK' || event.data.type === 'CHECK_PRAYER')) {
+    event.waitUntil(checkPrayerTimes());
   }
 });
 
+// Клик по уведомлению — открываем сайт
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data.url));
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      for (var i = 0; i < windowClients.length; i++) {
+        var client = windowClients[i];
+        if (client.url === '/' && 'focus' in client) return client.focus();
+      }
+      if (clients.openWindow) return clients.openWindow('/');
+    })
+  );
+});
+
+// Для Push (если будет сервер)
+self.addEventListener('push', function(event) {
+  console.log('[Service Worker]: Received push event', event);
 });
