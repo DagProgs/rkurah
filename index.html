@@ -10,8 +10,7 @@
     <meta name="google" content="notranslate">
     <title>Рузнама Курахский район</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="Точное время обязательных намазов:
-    сегодня - месяц - год">
+    <meta name="description" content="Точное время обязательных намазов: сегодня - месяц - год">
     <meta name="keywords"
         content="Рузнама, Рузнама Курах, Курах, Курах рузнама, Курахский район, Времена намазов, времена намазов Курах, Кьурагь Дагълар">
     <meta name="robots" content="index,follow,noodp">
@@ -115,6 +114,24 @@
         .theme-toggle {
             position: absolute;
             right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: var(--item-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        /* Стили для кнопки Поделиться */
+        .share-btn {
+            position: absolute;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
             width: 42px;
@@ -251,7 +268,6 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
-            /* Важно для прогресс-бара */
         }
 
         .prayer-item .name,
@@ -446,8 +462,16 @@
         }
     </style>
 </head>
-<class="light-mode">
+
+<body class="light-mode">
     <header>
+        <div class="share-btn" onclick="shareApp()">
+            <svg viewBox="0 0 24 24" style="width:20px; height:20px; stroke: var(--text-main);">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                <polyline points="16 6 12 2 8 6"></polyline>
+                <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+        </div>
         <div class="header-content">
             <div class="header-title">Курахский р-он</div>
             <div class="header-badge">Рузнама</div>
@@ -533,7 +557,6 @@
             </div>
         </nav>
     </div>
-
     <script>
         let ruznamaDB = { "January": {}, "February": {}, "March": {}, "April": {}, "May": {}, "June": {}, "July": {}, "August": {}, "September": {}, "October": {}, "November": {}, "December": {} };
         const mEN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -568,7 +591,6 @@
             const now = new Date(), day = String(now.getDate()).padStart(2, '0'), month = mEN[now.getMonth()];
             document.getElementById('lbl-today').innerText = `${now.getDate()} ${mRU[now.getMonth()]}`;
             const todayData = ruznamaDB[month] ? ruznamaDB[month][day] : null;
-
             if (todayData) {
                 document.getElementById('list-today').innerHTML = pKeys.map((k, i) => `
     <div class="prayer-item" id="prayer-${i}">
@@ -587,20 +609,16 @@
         function updateProgressBar(data) {
             const now = new Date();
             const cur = now.getHours() * 60 + now.getMinutes();
-
             pKeys.forEach((key, i) => {
                 const bar = document.getElementById(`bar-${i}`);
                 if (!bar) return;
-
                 const start = data[pKeys[i]][0] * 60 + data[pKeys[i]][1];
                 let end;
-
                 if (i < pKeys.length - 1) {
                     end = data[pKeys[i + 1]][0] * 60 + data[pKeys[i + 1]][1];
                 } else {
-                    end = 24 * 60; // До конца дня для Иша
+                    end = 24 * 60;
                 }
-
                 if (cur < start) bar.style.width = '0%';
                 else if (cur >= end) bar.style.width = '100%';
                 else bar.style.width = ((cur - start) / (end - start)) * 100 + '%';
@@ -638,10 +656,10 @@
             const mNameEN = mEN[idx], tbody = document.getElementById('tbl-month'), monthData = ruznamaDB[mNameEN] || {}, dNow = new Date().getDate(), mNow = new Date().getMonth();
             document.getElementById('lbl-month').innerText = mFull[idx];
             tbody.innerHTML = Object.keys(monthData).sort((a, b) => a - b).map(d => `
-    <tr class="${(parseInt(d) === dNow && idx === mNow) ? 'today-row' : ''}">
-    <td><b>${d}</b></td>
-    ${pKeys.map(k => `<td>${fmt(monthData[d][k])}</td>`).join('')}
-    </tr>`).join('');
+ <tr class="${(parseInt(d) === dNow && idx === mNow) ? 'today-row' : ''}">
+ <td><b>${d}</b></td>
+ ${pKeys.map(k => `<td>${fmt(monthData[d][k])}</td>`).join('')}
+ </tr>`).join('');
         }
 
         function selectMonth(i) { currentMonthIdx = i; renderMonthTable(i); switchTab(1, 'month', true); }
@@ -669,6 +687,23 @@
             localStorage.setItem('ruznama-theme', isDark ? 'dark' : 'light');
         }
 
+        // Функция для Web Share API
+        async function shareApp() {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Рузнама Курахский район',
+                        text: 'Точное время намазов для Курахского района.',
+                        url: window.location.href
+                    });
+                } catch (err) {
+                    console.log('Ошибка при попытке поделиться:', err);
+                }
+            } else {
+                alert('Ваш браузер не поддерживает функцию "Поделиться"');
+            }
+        }
+
         if (localStorage.getItem('ruznama-theme') === 'dark') document.body.classList.add('dark-mode');
         init();
         setInterval(() => { render(); checkJuma(); }, 30000);
@@ -677,6 +712,6 @@
     <script type="text/javascript" src="polyfills.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script src="assets/js/theme.js"></script>
-    </body>
+</body>
 
 </html>
