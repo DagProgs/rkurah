@@ -26,7 +26,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "48d52c47566406d253235dad7a83ee84"
+    "revision": "f4ac6c9bdd95a0a3426b24c7e92efa82"
   },
   {
     "url": "manifest.json",
@@ -91,6 +91,34 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "assets/icons/icon-96x96.png",
     "revision": "9815fb3c4b57df1e8cda23d01fc66078"
+  },
+  {
+    "url": "assets/img/1.png",
+    "revision": "ebd6b3b3e70a8b2a01f3485fdf0199c3"
+  },
+  {
+    "url": "assets/img/2.png",
+    "revision": "ff1df813b153209ed897de30e864fd04"
+  },
+  {
+    "url": "assets/img/3.png",
+    "revision": "4ac907fe83fffa296a0a82b2834fb5e1"
+  },
+  {
+    "url": "assets/img/4.png",
+    "revision": "ccd010eed14e86ef1756e5a4a7ece29d"
+  },
+  {
+    "url": "assets/img/5.png",
+    "revision": "dc0036db39b2bf3b0091e24101479a41"
+  },
+  {
+    "url": "assets/img/6.png",
+    "revision": "5f2e42090570ec258281610c1d6f0933"
+  },
+  {
+    "url": "assets/img/7.png",
+    "revision": "8a3ea791bd4ece4448adb13df9bcfc78"
   },
   {
     "url": "assets/js/jquery.min.js",

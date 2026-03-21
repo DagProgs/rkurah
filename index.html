@@ -460,6 +460,41 @@
                 transform: translateY(0);
             }
         }
+
+        /*iphone*/
+        .iphoneinstall {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        .iphoneinstall img {
+            width: 100vw;
+            height: auto;
+            border: 2px solid rgb(68, 68, 26);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .iphoneinstall p {
+            display: flex;
+            padding-left: 10px;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: bold;
+            background-color: yellow;
+            padding: 10px;
+        }
+
+        .iphoneinstall button {
+            margin: 10px;
+        }
     </style>
 </head>
 
@@ -712,6 +747,94 @@
     <script type="text/javascript" src="polyfills.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script src="assets/js/theme.js"></script>
+
+
+    <!--iphone-->
+    <!-- Окно с инструкцией -->
+    <div id="pwa-install-prompt" class="iphoneinstall">
+        <h3>Установите приложение</h3>
+        <p>Нажмите «Поделиться», затем «На экран „Домой“»</p>
+        <img src="assets/img/1.png" alt="Шаг 1" width="100">
+        <img src="assets/img/2.png" alt="Шаг 2" width="100">
+        <img src="assets/img/3.png" alt="Шаг 1" width="100">
+        <p>или</p>
+        <img src="assets/img/4.png" alt="Шаг 2" width="100">
+        <img src="assets/img/5.png" alt="Шаг 1" width="100">
+        <img src="assets/img/6.png" alt="Шаг 2" width="100">
+        <img src="assets/img/7.png" alt="Шаг 1" width="100">
+        <button onclick="closePrompt()">Понятно</button>
+    </div>
+    <script>
+        function initPWAInstallation() {
+            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+            // Проверяем, запущено ли уже как PWA (standalone)
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone;
+
+            // Проверяем, скрывал ли пользователь инструкцию ранее
+            const isDismissed = localStorage.getItem('pwa_prompt_dismissed');
+
+            // Показываем только если: это iOS, еще не установлено и не скрыто вручную
+            if (isIos && !isStandalone && !isDismissed) {
+                document.getElementById('pwa-install-prompt').style.display = 'block';
+            }
+        }
+
+        function closePrompt() {
+            document.getElementById('pwa-install-prompt').style.display = 'none';
+            // Запоминаем, что пользователь закрыл окно, чтобы не бесить его
+            localStorage.setItem('pwa_prompt_dismissed', 'true');
+        }
+
+        // Запускаем проверку при загрузке страницы
+        window.onload = initPWAInstallation;
+    </script>
+
+
+    <!--android-->
+    <button id="android-install-btn"
+        style="display: none; position: fixed; top: 10px; right: 10px; padding: 10px; z-index: 1000;">
+        Установить приложение
+    </button>
+    <script>
+        let deferredPrompt; // Переменная для хранения события
+        const installBtn = document.getElementById('android-install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // 1. Предотвращаем автоматический показ системного мини-баннера
+            e.preventDefault();
+            // 2. Сохраняем событие, чтобы вызвать его позже по клику
+            deferredPrompt = e;
+            // 3. Показываем нашу кнопку установки
+            installBtn.style.display = 'block';
+
+            console.log("'beforeinstallprompt' сработал");
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // 4. Показываем системное окно установки
+                deferredPrompt.prompt();
+
+                // 5. Ждем ответа пользователя (установил или отменил)
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`Результат установки: ${outcome}`);
+
+                // 6. В любом случае скрываем нашу кнопку после взаимодействия
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            }
+        });
+
+        // Дополнительно: скрываем кнопку, если приложение уже установлено
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA установлено успешно');
+            installBtn.style.display = 'none';
+            deferredPrompt = null;
+        });
+
+    </script>
 </body>
 
 </html>
