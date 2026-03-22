@@ -6,13 +6,13 @@
     <link rel="icon" href="favicon.ico" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta name="theme-color" content="#ffffff" id="theme-color">
+    <meta id="status-bar-color" name="theme-color" content="#f8f9fa">
     <meta name="google" content="notranslate">
     <title>Рузнама Курахский район</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="Точное время обязательных намазов: сегодня - месяц - год">
-    <meta name="keywords" content="Рузнама, Рузнама Курах, Курах, Курах рузнама, Курахский район, 
-Времена намазов, времена намазов Курах, Кьурагь Дагълар">
+    <meta name="keywords"
+        content="Рузнама, Рузнама Курах, Курах, Курах рузнама, Курахский район, Времена намазов, времена намазов Курах, Кьурагь Дагълар">
     <meta name="robots" content="index,follow,noodp">
     <meta name="googlebot" content="index,follow">
     <meta name="google" content="nositelinkssearchbox">
@@ -28,7 +28,7 @@
             --accent: #6366f1;
             --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             --bg: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.7);
+            --glass: rgba(255, 255, 255, 0.85);
             --card-bg: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
@@ -41,7 +41,7 @@
 
         body.dark-mode {
             --bg: #0f172a;
-            --glass: rgba(30, 41, 59, 0.7);
+            --glass: rgba(30, 41, 59, 0.85);
             --card-bg: #1e293b;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -64,8 +64,7 @@
 
         body {
             min-height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-                Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             transition: background-color 0.5s ease, color 0.5s ease;
@@ -129,6 +128,7 @@
             transition: var(--transition);
         }
 
+        /* Стили для кнопки Поделиться */
         .share-btn {
             position: absolute;
             left: 20px;
@@ -383,19 +383,16 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            width: auto;
         }
 
         .dock {
             display: flex;
             background: var(--glass);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            backdrop-filter: blur(25px) saturate(180%);
-            background-clip: padding-box;
+            backdrop-filter: blur(30px);
             padding: 8px;
             border-radius: 32px;
             border: 1px solid var(--border);
-            box-shadow: 0 15px 35px var(--shadow);
+            box-shadow: 0 20px 40px var(--shadow);
             position: relative;
         }
 
@@ -464,6 +461,7 @@
             }
         }
 
+        /*iphone*/
         .iphoneinstall {
             display: none;
             position: fixed;
@@ -519,7 +517,6 @@
             </svg>
         </div>
     </header>
-
     <main>
         <div id="tab-today" class="tab-content active">
             <div class="juma-card" id="juma-banner">Джума Мубарак!</div>
@@ -536,7 +533,6 @@
                 <div id="list-today"></div>
             </div>
         </div>
-
         <div id="tab-month" class="tab-content">
             <div class="card" style="padding: 20px 8px;">
                 <div class="card-header">
@@ -561,7 +557,6 @@
                 </div>
             </div>
         </div>
-
         <div id="tab-year" class="tab-content">
             <div class="card">
                 <div class="card-header">
@@ -572,7 +567,6 @@
             </div>
         </div>
     </main>
-
     <div class="dock-container">
         <nav class="dock">
             <div class="indicator" id="nav-indicator"></div>
@@ -598,31 +592,8 @@
             </div>
         </nav>
     </div>
-
-    <div id="pwa-install-prompt" class="iphoneinstall">
-        <h3>Установите приложение</h3>
-        <p>Нажмите «Поделиться», затем «На экран „Домой“»</p>
-        <img src="assets/img/1.png" alt="Шаг 1" width="100">
-        <img src="assets/img/2.png" alt="Шаг 2" width="100">
-        <img src="assets/img/3.png" alt="Шаг 1" width="100">
-        <p>или</p>
-        <img src="assets/img/4.png" alt="Шаг 2" width="100">
-        <img src="assets/img/5.png" alt="Шаг 1" width="100">
-        <img src="assets/img/6.png" alt="Шаг 2" width="100">
-        <img src="assets/img/7.png" alt="Шаг 1" width="100">
-        <button onclick="closePrompt()">Понятно</button>
-    </div>
-
-    <button id="android-install-btn"
-        style="display: none; position: fixed; top: 10px; right: 10px; padding: 10px; z-index: 1000;">
-        Установить приложение
-    </button>
-
     <script>
-        let ruznamaDB = {
-            "January": {}, "February": {}, "March": {}, "April": {}, "May": {}, "June": {},
-            "July": {}, "August": {}, "September": {}, "October": {}, "November": {}, "December": {}
-        };
+        let ruznamaDB = { "January": {}, "February": {}, "March": {}, "April": {}, "May": {}, "June": {}, "July": {}, "August": {}, "September": {}, "October": {}, "November": {}, "December": {} };
         const mEN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const mRU = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
         const mFull = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
@@ -635,11 +606,6 @@
                 const res = await fetch('assets/db/times_db.json');
                 if (res.ok) { ruznamaDB = await res.json(); }
             } catch (e) { console.log("Локальный режим"); }
-            if (localStorage.getItem('ruznama-theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-                updateThemeIcon(true);
-                updateStatusBar(true);
-            }
             render();
             startCountdown();
             checkJuma();
@@ -662,17 +628,17 @@
             const todayData = ruznamaDB[month] ? ruznamaDB[month][day] : null;
             if (todayData) {
                 document.getElementById('list-today').innerHTML = pKeys.map((k, i) => `
-<div class="prayer-item" id="prayer-${i}">
-<span class="name">${pNames[i]}</span>
-<span class="time">${fmt(todayData[k])}</span>
-<div class="prayer-bar-fill" id="bar-${i}"></div>
-</div>`).join('');
+    <div class="prayer-item" id="prayer-${i}">
+    <span class="name">${pNames[i]}</span>
+    <span class="time">${fmt(todayData[k])}</span>
+    <div class="prayer-bar-fill" id="bar-${i}"></div>
+    </div>`).join('');
                 highlightPrayer(todayData);
                 updateProgressBar(todayData);
             }
             renderMonthTable(currentMonthIdx);
             document.getElementById('grid-year').innerHTML = mFull.map((name, i) => `
-<div class="month-tile ${i === now.getMonth() ? 'current' : ''}" onclick="selectMonth(${i})">${name}</div>`).join('');
+    <div class="month-tile ${i === now.getMonth() ? 'current' : ''}" onclick="selectMonth(${i})">${name}</div>`).join('');
         }
 
         function updateProgressBar(data) {
@@ -716,8 +682,7 @@
                     else if (nextIdx > 0) labelEl.innerText = `До конца ${pNames[nextIdx - 1]}`;
                     else labelEl.innerText = `До намаза ${pNames[nextIdx]}`;
                 } else {
-                    labelEl.innerText = "День завершен"; timerEl.innerText = "00:00:00";
-                    warnEl.style.display = 'none';
+                    labelEl.innerText = "День завершен"; timerEl.innerText = "00:00:00"; warnEl.style.display = 'none';
                 }
             }, 1000);
         }
@@ -726,10 +691,10 @@
             const mNameEN = mEN[idx], tbody = document.getElementById('tbl-month'), monthData = ruznamaDB[mNameEN] || {}, dNow = new Date().getDate(), mNow = new Date().getMonth();
             document.getElementById('lbl-month').innerText = mFull[idx];
             tbody.innerHTML = Object.keys(monthData).sort((a, b) => a - b).map(d => `
-<tr class="${(parseInt(d) === dNow && idx === mNow) ? 'today-row' : ''}">
-<td><b>${d}</b></td>
-${pKeys.map(k => `<td>${fmt(monthData[d][k])}</td>`).join('')}
-</tr>`).join('');
+ <tr class="${(parseInt(d) === dNow && idx === mNow) ? 'today-row' : ''}">
+ <td><b>${d}</b></td>
+ ${pKeys.map(k => `<td>${fmt(monthData[d][k])}</td>`).join('')}
+ </tr>`).join('');
         }
 
         function selectMonth(i) { currentMonthIdx = i; renderMonthTable(i); switchTab(1, 'month', true); }
@@ -751,71 +716,125 @@ ${pKeys.map(k => `<td>${fmt(monthData[d][k])}</td>`).join('')}
         }
 
         function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle('dark-mode');
-            const isDark = body.classList.contains('dark-mode');
-            updateThemeIcon(isDark);
-            updateStatusBar(isDark);
+            const body = document.body, icon = document.getElementById('theme-icon');
+            body.classList.toggle('dark-mode'); const isDark = body.classList.contains('dark-mode');
+            icon.innerHTML = isDark ? '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>' : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
             localStorage.setItem('ruznama-theme', isDark ? 'dark' : 'light');
         }
 
-        function updateThemeIcon(isDark) {
-            const icon = document.getElementById('theme-icon');
-            icon.innerHTML = isDark ? '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>' : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-        }
-
-        function updateStatusBar(isDark) {
-            const themeColorMeta = document.getElementById('theme-color');
-            themeColorMeta.setAttribute('content', isDark ? '#0f172a' : '#f8fafc');
-        }
-
+        // Функция для Web Share API
         async function shareApp() {
             if (navigator.share) {
                 try {
-                    await navigator.share({ title: 'Рузнама Курахский район', text: 'Точное время намазов для Курахского района.', url: window.location.href });
-                } catch (err) { console.log('Ошибка при попытке поделиться:', err); }
-            } else { alert('Ваш браузер не поддерживает функцию "Поделиться"'); }
+                    await navigator.share({
+                        title: 'Рузнама Курахский район',
+                        text: 'Точное время намазов для Курахского района.',
+                        url: window.location.href
+                    });
+                } catch (err) {
+                    console.log('Ошибка при попытке поделиться:', err);
+                }
+            } else {
+                alert('Ваш браузер не поддерживает функцию "Поделиться"');
+            }
         }
 
+        if (localStorage.getItem('ruznama-theme') === 'dark') document.body.classList.add('dark-mode');
         init();
         setInterval(() => { render(); checkJuma(); }, 30000);
-
-        function initPWAInstallation() {
-            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-            const isDismissed = localStorage.getItem('pwa_prompt_dismissed');
-            if (isIos && !isStandalone && !isDismissed) { document.getElementById('pwa-install-prompt').style.display = 'block'; }
-        }
-
-        function closePrompt() {
-            document.getElementById('pwa-install-prompt').style.display = 'none';
-            localStorage.setItem('pwa_prompt_dismissed', 'true');
-        }
-        window.onload = initPWAInstallation;
-
-        let deferredPrompt;
-        const installBtn = document.getElementById('android-install-btn');
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'block';
-        });
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installBtn.style.display = 'none';
-            }
-        });
-        window.addEventListener('appinstalled', () => {
-            installBtn.style.display = 'none';
-            deferredPrompt = null;
-        });
     </script>
     <script type="text/javascript" src="runtime.js"></script>
     <script type="text/javascript" src="polyfills.js"></script>
     <script type="text/javascript" src="main.js"></script>
+    <script src="assets/js/theme.js"></script>
+
+
+    <!--iphone-->
+    <!-- Окно с инструкцией -->
+    <div id="pwa-install-prompt" class="iphoneinstall">
+        <h3>Установите приложение</h3>
+        <p>Нажмите «Поделиться», затем «На экран „Домой“»</p>
+        <img src="assets/img/1.png" alt="Шаг 1" width="100">
+        <img src="assets/img/2.png" alt="Шаг 2" width="100">
+        <img src="assets/img/3.png" alt="Шаг 1" width="100">
+        <p>или</p>
+        <img src="assets/img/4.png" alt="Шаг 2" width="100">
+        <img src="assets/img/5.png" alt="Шаг 1" width="100">
+        <img src="assets/img/6.png" alt="Шаг 2" width="100">
+        <img src="assets/img/7.png" alt="Шаг 1" width="100">
+        <button onclick="closePrompt()">Понятно</button>
+    </div>
+    <script>
+        function initPWAInstallation() {
+            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+            // Проверяем, запущено ли уже как PWA (standalone)
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone;
+
+            // Проверяем, скрывал ли пользователь инструкцию ранее
+            const isDismissed = localStorage.getItem('pwa_prompt_dismissed');
+
+            // Показываем только если: это iOS, еще не установлено и не скрыто вручную
+            if (isIos && !isStandalone && !isDismissed) {
+                document.getElementById('pwa-install-prompt').style.display = 'block';
+            }
+        }
+
+        function closePrompt() {
+            document.getElementById('pwa-install-prompt').style.display = 'none';
+            // Запоминаем, что пользователь закрыл окно, чтобы не бесить его
+            localStorage.setItem('pwa_prompt_dismissed', 'true');
+        }
+
+        // Запускаем проверку при загрузке страницы
+        window.onload = initPWAInstallation;
+    </script>
+
+
+    <!--android-->
+    <button id="android-install-btn"
+        style="display: none; position: fixed; top: 10px; right: 10px; padding: 10px; z-index: 1000;">
+        Установить приложение
+    </button>
+    <script>
+        let deferredPrompt; // Переменная для хранения события
+        const installBtn = document.getElementById('android-install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // 1. Предотвращаем автоматический показ системного мини-баннера
+            e.preventDefault();
+            // 2. Сохраняем событие, чтобы вызвать его позже по клику
+            deferredPrompt = e;
+            // 3. Показываем нашу кнопку установки
+            installBtn.style.display = 'block';
+
+            console.log("'beforeinstallprompt' сработал");
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // 4. Показываем системное окно установки
+                deferredPrompt.prompt();
+
+                // 5. Ждем ответа пользователя (установил или отменил)
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`Результат установки: ${outcome}`);
+
+                // 6. В любом случае скрываем нашу кнопку после взаимодействия
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            }
+        });
+
+        // Дополнительно: скрываем кнопку, если приложение уже установлено
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA установлено успешно');
+            installBtn.style.display = 'none';
+            deferredPrompt = null;
+        });
+
+    </script>
 </body>
 
 </html>
