@@ -26,7 +26,7 @@ workbox.precaching.precacheAndRoute([
   },
   {
     "url": "index.html",
-    "revision": "c0d324b9c712e4ff97cb874fd3c93c15"
+    "revision": "3ca88b3e596150fa12c7bebfb4ebc760"
   },
   {
     "url": "manifest.json",
@@ -127,10 +127,6 @@ workbox.precaching.precacheAndRoute([
   {
     "url": "assets/js/script.js",
     "revision": "1e430d7d5431a693ccf0a505a5eefa90"
-  },
-  {
-    "url": "assets/js/theme.js",
-    "revision": "25b4ad6890da8399cd38f1cbe3b905bb"
   }
 ]);
 
