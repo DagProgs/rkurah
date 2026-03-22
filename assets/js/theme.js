@@ -1,34 +1,36 @@
-// 1. Находим мета-тег в документе
 const statusBar = document.getElementById('status-bar-color');
 
-// 2. Функция для обновления интерфейса темы
+// Функция, которая только применяет визуальные изменения
 function updateThemeUI(isDark) {
-    // Меняем цвет мета-тега theme-color
-    // Если тема темная — ставим #121212, если светлая — #f8f9fa
-    const themeColor = isDark ? '#121212' : '#f8f9fa';
+    // 1. Переключаем класс у body
+    if (isDark) {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+
+    // 2. Меняем цвет системной панели (Status Bar)
+    const themeColor = isDark ? '#121212' : '#ffffff';
     statusBar.setAttribute('content', themeColor);
-    
-    // Дополнительно: меняем иконку (опционально)
-    console.log("Цвет панели изменен на: " + themeColor);
 }
 
-// 3. Основная функция переключения
+// Функция, которую мы вызываем при клике на кнопку
 function toggleTheme() {
-    // Переключаем класс dark-mode у body
-    const isDark = document.body.classList.toggle('dark-mode');
+    // Проверяем, есть ли сейчас темный режим
+    const isDark = !document.body.classList.contains('dark-mode');
     
-    // Сохраняем выбор в память браузера
-    localStorage.setItem('mavlid_theme', isDark ? 'dark' : 'light');
+    // Сохраняем выбор (true/false) в память
+    localStorage.setItem('isDarkMode', isDark);
     
-    // Обновляем цвет статус-бара
+    // Применяем изменения
     updateThemeUI(isDark);
 }
 
-// При загрузке страницы проверяем сохраненную тему
+// При загрузке страницы восстанавливаем состояние
 window.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('mavlid_theme') === 'dark';
-    if (savedTheme) {
-        document.body.classList.add('dark-mode');
-    }
+    // Достаем значение из памяти. Если там пусто, по умолчанию будет false (светлая)
+    const savedTheme = localStorage.getItem('isDarkMode') === 'true';
+    
+    // Применяем сохраненную тему
     updateThemeUI(savedTheme);
 });
